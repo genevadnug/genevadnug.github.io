@@ -129,7 +129,10 @@ $(window).load(function() { // makes sure the whole site is loaded
 	$('#status').fadeOut(); // will first fade out the loading animation
 	$('#preloader').delay(350).fadeOut('slow');
     // will fade out the white DIV that covers the website.
-	$('body').delay(350).css({'overflow':'visible'});
+	$('body').delay(350).css({ 'overflow': 'visible' });
+    $('.navbar').removeClass('animated fadeOutUp')
+          .addClass('animated fadeInDown')
+          .fadeIn();
 })
 //========================
 //CUSTOM SCROLLBAR
@@ -172,7 +175,7 @@ $(function() {
     $(".navbar").hide();
 
     // fade in .navbar
-    $(function () {
+   /* $(function () {
         $(window).scroll(function () {
 
                  // set distance user needs to scroll before we start fadeIn
@@ -189,7 +192,7 @@ $(function() {
                 .fadeOut();
             }
         });
-    });
+    });*/
 
 });
   }(jQuery));
