@@ -1,0 +1,6 @@
+{
+	"group" : "https://api.meetup.com/Geneva-NET-User-Group?photo-host=public&page=20&sig_id=67833332&sig=ef55990d355bf44d22624e35aa3b62424dd59ea4",
+	"nextEvent" : "https://api.meetup.com/2/events?offset=0&format=json&limited_events=False&group_urlname=Geneva-NET-User-Group&photo-host=public&page=20&fields=&order=time&desc=false&status=upcoming&sig_id=67833332&sig=c159d829d9aafad843c08bf625b1593d88546c01",
+	"pastEvents" : "https://api.meetup.com/2/events?offset=0&format=json&limited_events=False&group_urlname=Geneva-NET-User-Group&photo-host=public&page=4&fields=&order=time&status=past&desc=true&sig_id=67833332&sig=bed632114c88e057c669cb33777ac2789fb8aa18",
+	"thumbnails" :  "https://api.meetup.com/2/photos?offset=0&format=json&group_urlname=Geneva-NET-User-Group&only=thumb_link%2Cphoto_album&photo-host=public&page=20&fields=&order=time&desc=True&sig_id=67833332&sig=d8f4c3dd484801ed30ce5ba1fe7261723e109e4a"
+}
