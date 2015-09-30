@@ -103,7 +103,7 @@ $(function () {
 				var eventUrlString = eventIdStrArr.join("%2C");
 				
 				if (eventIds.length > 0) {
-					$.getJSON('thumbnails',
+					getJSONOrProxy('thumbnails',
 						function (imgData) {
 							if (imgData.results) {
 								for (var i = 0; i < imgData.results.length; i++) {
