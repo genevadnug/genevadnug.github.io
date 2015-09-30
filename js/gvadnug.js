@@ -80,7 +80,7 @@ $(function () {
 				try {
 					return $.getJSON(urls[urlName] + "&callback=?", callback);
 				}
-				catch{
+				catch (error){
 					return $.getJSON("http://meetup.nattkul.com/?url-key=" + urlName + "&callback=?", callback);
 				}
 			};
