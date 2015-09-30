@@ -6,7 +6,8 @@ String.prototype.trunc = String.prototype.trunc ||
       function (n) {
           return this.length > n ? this.substr(0, n - 1) + '&hellip;' : this;
       };
-
+  
+	  
 // Simple JavaScript Templating
 // John Resig - http://ejohn.org/ - MIT Licensed
 (function () {
@@ -63,25 +64,43 @@ $(function () {
                         data.index = i;
                         html += tmpl(templateId, data);
                     }
-
-                    $(this).html(html);
+					if (html.trim() != '') {
+						$(this).html(html);
+					}
                 } else {
-                    $(this).html(dataToApply);
+					if ((dataToApply + '').trim() != '') {
+						$(this).html(dataToApply);
+					}
                 }
-                
-                console.debug("applied " + $(this).attr(attribute));
             });
         }
     };
 	
 	$.getJSON('/data/meetup-api-urls.json', 
 		function(urls) { 
-			var getJSONOrProxy = function(urlName, callback) {
+			var failedOnce = false;
+			var getJSONOrProxy = function(urlName, callback, doneCallback) {
+				doneCallback = doneCallback || function() {};
+				var failOver = function() {
+					failedOnce = true;
+					return $.getJSON("http://meetup.nattkul.com/?url-key=" + urlName + "&callback=?", callback)
+						.done(doneCallback);
+				};
+				
+				if (failedOnce) {
+					return failOver();
+				}
+				
 				try {
-					return $.getJSON(urls[urlName] + "&callback=?", callback);
+					var failOverTimer = setTimeout(failOver, 340);
+					return $.getJSON(urls[urlName] + "&callback=?", callback)
+						.done(function() { 
+							clearTimeout(failOverTimer);
+							doneCallback(); 
+						});
 				}
 				catch (error){
-					return $.getJSON("http://meetup.nattkul.com/?url-key=" + urlName + "&callback=?", callback);
+					return failOver();
 				}
 			};
 			
@@ -90,42 +109,43 @@ $(function () {
 			getJSONOrProxy('nextEvent', callbackFactory("data-meetup-next-event"));
 
 			var squareUrlProvider = 'https://images.weserv.nl/?h=60&w=60&t=square&url=';
-			getJSONOrProxy('pastEvents', callbackFactory("data-meetup-past-events"))
-			.done(function () {
-				var eventIds = [];
-				var eventIdStrArr = [];
-				$("[data-meetup-event-id]").each(function () {
-					var eventId = $(this).data("meetupEventId");
-					eventIds[eventId] = 1;
-					eventIdStrArr.push(eventId);
-				});
+			getJSONOrProxy('pastEvents', 
+				callbackFactory("data-meetup-past-events"),
+				function () {
+					var eventIds = [];
+					var eventIdStrArr = [];
+					$("[data-meetup-event-id]").each(function () {
+						var eventId = $(this).data("meetupEventId");
+						eventIds[eventId] = 1;
+						eventIdStrArr.push(eventId);
+					});
 
-				var eventUrlString = eventIdStrArr.join("%2C");
-				
-				if (eventIds.length > 0) {
-					getJSONOrProxy('thumbnails',
-						function (imgData) {
-							if (imgData.results) {
-								for (var i = 0; i < imgData.results.length; i++) {
-									var currImgData = imgData.results[i];
-									var eventId = currImgData.photo_album.event_id;
+					var eventUrlString = eventIdStrArr.join("%2C");
+					
+					if (eventIds.length > 0) {
+						getJSONOrProxy('thumbnails',
+							function (imgData) {
+								if (imgData.results) {
+									for (var i = 0; i < imgData.results.length; i++) {
+										var currImgData = imgData.results[i];
+										var eventId = currImgData.photo_album.event_id;
 
-									// Only take first image for each event.
-									if (eventId && eventIds[eventId])
-										delete eventIds[eventId];
-									else {
-										continue;
+										// Only take first image for each event.
+										if (eventId && eventIds[eventId])
+											delete eventIds[eventId];
+										else {
+											continue;
+										}
+
+										var $img = $("[data-meetup-event-id='" + eventId + "'] img");
+										$img.attr("src", squareUrlProvider + currImgData.thumb_link.replace(/.*?:\/\//g, "")); $img
+										$img.attr("title", "A pic from this event");
+										$img.attr("alt", "A pic from this event.");
 									}
-
-									var $img = $("[data-meetup-event-id='" + eventId + "'] img");
-									$img.attr("src", squareUrlProvider + currImgData.thumb_link.replace(/.*?:\/\//g, "")); $img
-									$img.attr("title", "A pic from this event");
-									$img.attr("alt", "A pic from this event.");
 								}
-							}
-						});
-				}
-			});
+							});
+					}
+				});
 		
 		});
 
