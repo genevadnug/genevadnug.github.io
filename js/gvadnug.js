@@ -74,7 +74,7 @@ $(function () {
         }
     };
 	
-	$.getJSON('/data/meetup-api-urls.json'), 
+	$.getJSON('/data/meetup-api-urls.json', 
 		function(urls) { 
 			var getJSONOrProxy = function(urlName, callback) {
 				try {
@@ -126,7 +126,8 @@ $(function () {
 						});
 				}
 			});
-	});
+		
+		});
 
 });
 
