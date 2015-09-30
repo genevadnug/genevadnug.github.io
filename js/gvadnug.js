@@ -92,7 +92,7 @@ $(function () {
 				}
 				
 				try {
-					var failOverTimer = setTimeout(failOver, 340);
+					var failOverTimer = setTimeout(failOver, 1000);
 					return $.getJSON(urls[urlName] + "&callback=?", callback)
 						.done(function() { 
 							clearTimeout(failOverTimer);
