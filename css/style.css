@@ -325,3 +325,7 @@ FOLLOW BUTTON
 #contactData h4 {
      text-transform: uppercase;
 }
+
+#sponsors img {
+     height: 200px; /* TODO: Does this style need a media query? */
+}
